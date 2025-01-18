@@ -15,11 +15,10 @@ void printf(const char *fmt, ...) {
 		if(*fmt == '%') {
 			fmt++; //This is for %
 			switch(*fmt) {
-				case '\0':
-					putchar('%');
+				case 0:
 					goto end;
 				case '%': //print %
-					putchar('%');
+					putchar(*fmt);
 					break;
 				case 's': {//print a NULL terminated string
 						const char *s = va_arg(vargs, const char *);
@@ -31,27 +30,22 @@ void printf(const char *fmt, ...) {
 					  }
 				case 'd': {
 						int value = va_arg(vargs, int);
-						/*int ret = checksign(value);
-						if(ret != 1) {
-							putchar('-');
-							value = -value;
-						}*/
 						if (value < 0) {
 							putchar('-');
 							value = -value;
  						}
 						int divisor = 1;
-						while (value / divisor > 9)
+						while (value / divisor >= 10)
 							divisor *= 10;
 
-						while (divisor > 0) {
+						while (divisor) {
 							putchar('0' + value / divisor);
 							value %= divisor;
 							divisor /= 10;
 						}
 						break;
 					  }
-				case 'x': {//print an integer in hexadecimal
+				case 'x': case'X': {//print an integer in hexadecimal
 						int value = va_arg(vargs, int);
 						for(int i=7; i>=0; i--) {
 							int nibble = (value >> (i * 4)) & 0xf;
